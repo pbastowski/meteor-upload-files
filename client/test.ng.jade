@@ -1,0 +1,7 @@
+uploaded-images
+
+img(
+    ng-repeat="img in images track by img._id",
+    ng-src="{{ url(img) }}"
+    ng-click="images.remove(img)"
+    )
