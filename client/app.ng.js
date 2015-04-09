@@ -15,6 +15,7 @@
         $scope.upload = FileUpload.uploadImg;
         $scope.url = FileUpload.url;
         $scope.images = FileUpload.images;
+        $scope.issues = FileUpload.issues;
 
         $scope.takePhoto = takePhoto;
 

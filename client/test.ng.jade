@@ -5,3 +5,5 @@ img(
     ng-src="{{ url(img) }}"
     ng-click="images.remove(img)"
     )
+
+p(ng-repeat="issue in issues") Issue: {{ issue.i }}

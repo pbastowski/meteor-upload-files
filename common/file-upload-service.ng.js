@@ -21,10 +21,12 @@
 
     console.log('! file-upload-service.ng.js');
 
-    var Images = new FS.Collection('images', {
-        //stores: [new FS.Store.FileSystem("images", {path: "../../../../../.uploads"})]
-        stores: [new FS.Store.GridFS('images')]
-    });
+    //var Images = new FS.Collection('images', {
+    //    //stores: [new FS.Store.FileSystem("images", {path: "../../../../../.uploads"})]
+    //    stores: [new FS.Store.GridFS('images')]
+    //});
+
+    var Issues = new Mongo.Collection('test');
 
     if ( Meteor.isClient ) {
 
@@ -34,7 +36,8 @@
 
         function fileUpload($meteor, $log, $q) {
             return {
-                images:    $meteor.collection(function () { return Images.find() }),
+                //images:    $meteor.collection(function () { return Images.find() }),
+                //issues:    $meteor.collection(function () { return Issues.find() }),
                 url:       url,
                 uploadImg: uploadImg
             };
