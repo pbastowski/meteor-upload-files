@@ -37,7 +37,7 @@
         function fileUpload($meteor, $log, $q) {
             return {
                 //images:    $meteor.collection(function () { return Images.find() }),
-                //issues:    $meteor.collection(function () { return Issues.find() }),
+                issues:    $meteor.collection(function () { return Issues.find() }),
                 url:       url,
                 uploadImg: uploadImg
             };
