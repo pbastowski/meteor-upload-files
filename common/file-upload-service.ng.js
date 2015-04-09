@@ -37,7 +37,7 @@
             $meteor.subscribe('images');
 
             return {
-                images:    $meteor.collection(function () { return Images.find() }),
+                images:    $meteor.collection(Images),
                 url:       url,
                 uploadImg: uploadImg
             };
@@ -70,6 +70,12 @@
     }
 
     if ( Meteor.isServer ) {
+
+        Images.allow( {
+            insert: function() { return true},
+            update: function() { return true},
+            remove: function() { return true}
+        });
 
         Meteor.publish('images', function() {
             return Images.find();
