@@ -33,6 +33,9 @@
             .factory('FileUpload', fileUpload);
 
         function fileUpload($meteor, $log, $q) {
+
+            $meteor.subscribe('images');
+
             return {
                 images:    $meteor.collection(function () { return Images.find() }),
                 url:       url,
@@ -63,6 +66,14 @@
                 return d.promise;
             }
         }
+
+    }
+
+    if ( Meteor.isServer ) {
+
+        Meteor.publish('images', function() {
+            return Images.find();
+        });
 
     }
 
