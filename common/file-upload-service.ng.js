@@ -43,7 +43,8 @@
             };
 
             function url(image) {
-                return Images.findOne(image._id).url();
+                var img = Images.findOne(image._id);
+                return img && img.url() || '';
             }
 
             function uploadImg(el) {

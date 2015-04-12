@@ -7,6 +7,7 @@
     angular.module('app', ['angular-meteor'])
         .directive('pbChange', pbChange)
         .controller('app', appController)
+        .filter('keys', getKeys)
     ;
 
     function appController($scope, $log, FileUpload) {
@@ -68,6 +69,13 @@
         function toggle() {
             console.log(' background: ', $element.css('background-color'));
             $element.css('background-color', $element.css('background-color') == 'rgb(255, 255, 0)' ? '' : 'yellow');
+        }
+    }
+
+    function getKeys($log) {
+        return function (input, logIt) {
+            if (logIt) $log.debug(input);
+            return Object.keys(input);
         }
     }
 

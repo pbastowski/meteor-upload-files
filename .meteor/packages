@@ -8,7 +8,6 @@ meteor-platform
 cfs:standard-packages
 cfs:gridfs
 mquandalle:jade
-urigo:angular
 fourseven:scss
 civilframe:angular-jade
 twbs:bootstrap
@@ -16,3 +15,4 @@ cfs:filesystem
 mdg:camera
 cscottnet:es5-shim
 insecure
+urigo:angular
