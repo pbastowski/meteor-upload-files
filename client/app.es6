@@ -5,8 +5,8 @@ console.log('! app.js');
 angular.module('app', ['angular-meteor'])
     .directive('pbChange', pbChange)
     .controller('app', appController)
-    .filter('keys2', getKeys)
-    .filter('fil1', ($q) => ((input) => 'converted ' + input))
+    .filter('keys', ($log) => ((input, logIt) => { logIt && $log.debug(input); return Object.keys(input);}))
+    .filter('fil1', ($q) => ((input) => 'filter ' + input))
 ;
 
 function appController($scope, $log, FileUpload) {
@@ -66,8 +66,8 @@ function uploadedImages($scope, $element) {
     $element.css('cursor', 'pointer');
 
     function toggle() {
-        console.log(' background: ', $element.css('background-color'));
-        $element.css('background-color', $element.css('background-color') == 'rgb(255, 255, 0)' ? '' : 'yellow');
+        var el = $element.children(0);
+        el.css('background-color', el.css('background-color') == 'rgb(255, 255, 0)' ? '' : 'yellow');
     }
 }
 
@@ -86,10 +86,42 @@ class xxx {
         a2: '@',
         a3: '&'
     }
+
     template = '<pre>Hello booger!</pre>'
-    /* @ngInject */
-    controller($scope, $element, $attrs) {
-        console.log('controller');
+
+    link(scope, el, attr) {
+        console.log('xxx Link');
+        el.css({'cursor': 'pointer', '-webkit-user-select': 'none'});
+        el.on('click', function () {
+            console.log('click');
+            if (el.children(0)[0].style.background !=='yellow')
+                el.children(0).css('background', 'yellow');
+            else
+                el.children(0).css('background', '');
+            //el[0].style.background = 'yellow !important';
+        });
     }
+
+    ///* @ngInject */
+    //controller($scope, $element, $attrs) {
+    //    console.log('controller');
+    //}
 }
 
+function ngDirective(module) {
+
+    return function (target) {
+
+        var ddo = new target();
+
+        angular.module(module).directive(target.name, function () {
+            return {
+                //controllerAs: directiveName,
+                scope:      ddo.scope,
+                template:   ddo.template,
+                controller: ddo.controller,
+                link:       ddo.link
+            };
+        });
+    }
+}
