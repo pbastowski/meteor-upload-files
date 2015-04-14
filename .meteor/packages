@@ -10,10 +10,11 @@ insecure
 cfs:standard-packages
 cfs:gridfs
 mquandalle:jade
-urigo:angular
 fourseven:scss
 civilframe:angular-jade
 twbs:bootstrap
 cfs:filesystem
 mdg:camera
 cscottnet:es5-shim
+urigo:angular
+pbastowski:angular-babel
