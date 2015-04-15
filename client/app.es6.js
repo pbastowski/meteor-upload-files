@@ -3,7 +3,7 @@
 console.log('! app.js');
 
 angular.module('app', ['angular-meteor'])
-    .directive('pbChange', pbChange)
+    //.directive('pbChange', pbChange)
     .controller('app', appController)
     .filter('keys', ($log) => ((input, logIt) => { logIt && $log.debug(input); return Object.keys(input);}))
     .filter('fil1', ($q) => ((input) => 'filter ' + input))
@@ -38,23 +38,37 @@ function appController($scope, $log, FileUpload) {
  *
  * Usage: <input type="file" pb-change="upload($event)">
  */
-function pbChange() {
-    return {
-        restrict: 'A',
-        scope:    {pbChange: '&'},
-        link:     link
-    }
-
-    function link(scope, el) {
-        el.bind('change', function (evt) {
+//function pbChange() {
+//    return {
+//        restrict: 'A',
+//        scope:    {pbChange: '&'},
+//        link:     link
+//    }
+//
+//    function link(scope, el) {
+//        el.bind('change', function (evt) {
+//            if (scope.pbChange && scope.pbChange !== '') {
+//                scope.$apply(function () {
+//                    scope.pbChange({'$event': evt});
+//                });
+//            }
+//        })
+//    }
+//}
+@ngDirective('app')
+class pbChange {
+    scope = {pbChange: '&'}
+    link (scope, el) {
+        el.on('change', (evt) => {
             if (scope.pbChange && scope.pbChange !== '') {
-                scope.$apply(function () {
+                scope.$apply(() => {
                     scope.pbChange({'$event': evt});
-                });
+                })
             }
         })
     }
 }
+
 
 // The angular.component call below has nothing to do with the file upload
 // I am just testing here a function called angular.component, which creates
@@ -80,14 +94,16 @@ function getKeys($log) {
 
 
 @ngDirective('app')
-class xxx {
+class booger {
     scope = {
         a1: '=',
         a2: '@',
         a3: '&'
     }
 
-    template = '<pre>Hello booger!</pre>'
+    template = '<pre>Hello booger! {{ a1 + ", " + a2 }}</pre><div ng-transclude></div>'
+
+    transclude = true
 
     link(scope, el, attr) {
         console.log('xxx Link');
@@ -98,7 +114,6 @@ class xxx {
                 el.children(0).css('background', 'yellow');
             else
                 el.children(0).css('background', '');
-            //el[0].style.background = 'yellow !important';
         });
     }
 
@@ -108,7 +123,7 @@ class xxx {
     //}
 }
 
-function ngDirective(module) {
+function ngDirective(module='app') {
 
     return function (target) {
 
@@ -120,8 +135,26 @@ function ngDirective(module) {
                 scope:      ddo.scope,
                 template:   ddo.template,
                 controller: ddo.controller,
-                link:       ddo.link
+                link:       ddo.link,
+                'require':  ddo['require'],
+                transclude: ddo.transclude,
+                restrict:   ddo.restrict
             };
         });
+
+        console.log('transclude: ', ddo.transclude);
+    }
+}
+
+function ngController(module='app') {
+    return function (target) {
+        angular.module(module).controller(module+'.'+target.name, target);
+    }
+}
+
+@ngController('app')
+class appController {
+    constructor ($scope) {
+        $scope.test = () => 123
     }
 }

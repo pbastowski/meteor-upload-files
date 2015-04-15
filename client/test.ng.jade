@@ -5,10 +5,10 @@ img(
     ng-src="{{ url(img) }}"
     ng-click="images.remove(img)"
     )
-pre( ng-repeat="img in images track by img._id")
+//-pre( ng-repeat="img in images track by img._id")
     | {{ img | keys }}
 
-pre {{ 'hello' | fil1 }}
+pre(ng-controller="app.appController") {{ 'hello' | fil1 }} - {{ test() }}
 
-xxx
-
+booger(a1="1", a2="42")
+    | image count = {{ images.length }}
