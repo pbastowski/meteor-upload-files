@@ -1,16 +1,16 @@
 console.log('! angular.component.es6');
 
 angular.component = function (component, template, scope, controller) {
-    var module = component.split('.');
+    var moduleName = component.split('.');
 
-    if (module.length > 1) {
-        component = module[1];
-        module = module[0];
+    if (moduleName.length > 1) {
+        component = moduleName[1];
+        moduleName = moduleName[0];
     }
     else
-        module = 'app';
+        moduleName = 'app';
 
-    angular.module(module).directive(component, function () {
+    angular.module(moduleName).directive(component, function () {
         return {
             controllerAs: component,
             scope:        scope,
@@ -20,4 +20,3 @@ angular.component = function (component, template, scope, controller) {
     });
 
 };
-
