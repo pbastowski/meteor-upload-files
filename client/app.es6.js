@@ -3,20 +3,61 @@
 //import { Inject } from 'lib/angular2'
 angular.extend(this, angular.angular2);
 
+//SetModuleName('test01');
+SetModuleName(this.moduleName);
+
 console.log('! app.js');
 
-angular.module('app', ['angular-meteor'])
-    .filter('keys', ($log) => ((input, logIt) => { logIt && $log.debug(input); return Object.keys(input);}))
-    .filter('fil1', ($q) => ((input) => 'filter ' + (input+'').toUpperCase()))
-;
+angular.module('app', ['angular-meteor', 'client/app']);
 
-@Controller('app')
+@Controller()
 class appCtrl {
     constructor ($scope) {
         $scope.test = () => 123
     }
 }
 
+@Filter()
+class keys {
+    constructor ($log) {
+        return ((input, logIt) => { logIt && $log.debug(input); return Object.keys(input);})
+    }
+}
+
+@Filter()
+class fil1 {
+    prefix = 'filter '
+    constructor (prefix) {
+        if (prefix) this.prefix = prefix;
+        else prefix = this.prefix;
+
+        return function(input) {
+            return prefix + (input + '').toUpperCase();
+        }
+    }
+}
+
+@Filter()
+class fil2 extends fil1 {
+    constructor () {
+        return super('other ');
+    }
+}
+
+@Service()
+class service1 {
+    hello = 'this is'
+    world = 'a test'
+}
+
+@Service()
+class service2 {
+    hello = 'hello'
+    world = 'world'
+    test() {
+        return this.hello + ' ' + this.world;
+    }
+}
 
 @Controller()
 @Inject(['$scope', '$log', 'FileUpload'])
@@ -100,7 +141,7 @@ function getKeys($log) {
     }
 })
 @Template({
-    url: 'client/booger.ng.html'
+    url: 'client/booger.html'
 })
 @Inject(['$element'])
 class booger {
@@ -128,14 +169,15 @@ class booger {
     url: undefined
 })
 @Inject(['$element'])
-class pbDir {
+class pbDir extends booger {
     // @Template can be used, but you can also specify here any valid ddo property
     //template = '<pre>This is the component</pre>'
 
     constructor ($element) {
+        super($element);
         this.a = 1;
         this.b = 2;
-        console.log('@ controller 321');
+        console.log('- controller 321');
     }
 }
 
@@ -146,6 +188,7 @@ class pbDir {
 })
 @Template({
     inline: `
+        <h2>paul-special</h2>
         <pre>Name is {{paulSpecial.xxx}}</pre>
         <content></content>
     `
@@ -153,7 +196,7 @@ class pbDir {
 @Inject(['$element'])
 class proto {
     constructor ($element) {
-        console.log('! proto: ', this.xxx);
+        //console.log('! proto: ', this.xxx);
         this.xxx = 'Hello World 2';
 
         if ($element) {
@@ -164,18 +207,21 @@ class proto {
 }
 @Component({
     selector: 'paul-special2',
-    bind: { yyy: '@' }
+    bind: { yyy: '@' },
+    services: [ 'service1', service2 ]
 })
 @Template({
     inline: `
+        <h2>paul-special 2</h2>
         <pre>Name is {{paulSpecial2.yyy}}</pre>
         <content></content>
     `
 })
 export class fancyProto extends proto {
-    constructor ($element) {
+    constructor ($element, service1, service2) {
         // The super() call below will inherit the click event handler from the parent
         super($element);
+        console.log('fancyProto: services: ', service1, service2, service2.test());
     }
 }
 

@@ -1,15 +1,36 @@
 angular.angular2 = {
-    Component: Component,
-    Template: Template,
-    Inject: Inject,
+    Component:  Component,
+    Template:   Template,
+    Inject:     Inject,
     Controller: Controller,
-    Bootstrap: Bootstrap
+    Bootstrap:  Bootstrap,
+    Service:    Service,
+    'Filter':   Filter,
+    SetModuleName:  SetModuleName
+}
+
+var currentModule = 'app';
+
+function SetModuleName (module = 'app') {
+    currentModule = module;
+
+    // Check that the module exists and if not then create it now
+    try {
+        angular.module(module)
+    } catch (er) {
+        angular.module(module, []);
+        //console.log('SetModuleName: ', module)
+    }
 }
 
 function Component(options = {}) {
-    if (!options.module) options.module = 'app';
+    if (!options.module) options.module = currentModule || 'app';
 
     return function (target) {
+
+        // service injections
+        if (options.services && options.services instanceof Array)
+            target = Inject(options.services)(target);
 
         // selector is optional, if not specified then the className is used
         options.selector = camelCase(options.selector||'') || target.name+'';
@@ -43,10 +64,23 @@ function Component(options = {}) {
 
 function Inject(deps) {
     return function(target) {
-        target.$inject = deps;
+        if (!target.$inject)
+            target.$inject = [];
+
+        angular.forEach(deps, function(v,i) {
+            if (v instanceof Object) v = v.name;
+            if (target.$inject.indexOf(v) === -1)
+                target.$inject.push(v);
+        });
+
+        //console.log('@ Inject: deps: ', target.$inject);
+
+        //target.$inject = deps;
         return target
     }
 }
+
+
 
 function Template(options = {}) {
     if (!options.inline) options.inline = undefined;
@@ -66,14 +100,38 @@ function Template(options = {}) {
     }
 }
 
-function Controller(module='app') {
+function Controller(module=currentModule || 'app') {
     return function (target) {
-        console.log('@ ngController: ', module+target.name.slice(0,1).toUpperCase()+target.name.slice(1));
         target.controllerAs = target.name || '';
         target.bindToController = true;
 
+                //module+target.name.slice(0,1).toUpperCase()+target.name.slice(1),
         angular.module(module)
-            .controller(module+target.name.slice(0,1).toUpperCase()+target.name.slice(1), target);
+            .controller(
+                module+'.'+target.name,
+                target
+            );
+    }
+}
+
+function Service(options = {}) {
+    if (!options.module) options.module = currentModule || 'app';
+
+    return function(target) {
+        angular.module(options.module)
+            .factory(target.name, () => new target )
+    }
+}
+
+function Filter(options = {}) {
+    if (!options.module) options.module = currentModule || 'app';
+
+    return function(target) {
+
+        //console.log('@ Filter: ', target);
+
+        angular.module(options.module)
+            .filter(target.name, () => new target );
     }
 }
 
