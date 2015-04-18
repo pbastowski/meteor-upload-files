@@ -5,18 +5,20 @@ head
     meta(charset="utf-8")
 
 body
-    div.container(ng-app="app", ng-controller="app")
+    div.container(ng-app="app", ng-controller="appAppController")
 
         h3 Input[type=file] upload with Angular and Meteor
 
         p
             button.btn.btn-primary(ng-click="takePhoto()") Take a Photo with the Camera
 
+        pre(ng-bind="appAppController.test | json")
+
         p
             span.btn.btn-success.file-container
                 input(
                     type="file",
-                    pb-change="upload($event)",
+                    file-change="upload($event)",
                     )
                 | Select an image to Upload
 
