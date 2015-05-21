@@ -26,44 +26,39 @@ var Images = new FS.Collection('images', {
 
 if (Meteor.isClient) {
 
-    // Add the FileUpload service for the Client
-    angular.module('app')
-        .factory('FileUpload', fileUpload);
+    @Service('FileUpload')
+    @Inject(['$meteor', '$log', '$q'])
+    class fileUpload {
+        constructor($meteor, $log, $q) {
+            return {
+                images:    $meteor.collection(Images),
+                url:       url,
+                uploadImg: uploadImg
+            };
 
-}
+            function url(image) {
+                return Images.findOne(image._id).url();
+            }
 
-function fileUpload($meteor, $log, $q) {
-    return {
-        //images:    $meteor.collection(function () {
-        //    return Images.find()
-        //}),
-        images: $meteor.collection(Images),
-        url:       url,
-        uploadImg: uploadImg
-    };
+            function uploadImg(el) {
+                if (el instanceof HTMLElement)
+                    var data = el.files[0];
+                else if (el instanceof jQuery.Event)
+                    data = el.target.files[0];
+                else
+                    data = el;
 
-    function url(image) {
-        return Images.findOne(image._id).url();
-    }
+                var d = $q.defer();
 
-    function uploadImg(el) {
-        if (el instanceof HTMLElement)
-            var data = el.files[0];
-        else if (el instanceof jQuery.Event)
-            data = el.target.files[0];
-        else
-            data = el;
+                Images.insert(data, function (err, fileObj) {
+                    if (err)
+                        d.reject(err);
+                    else
+                        d.resolve();
+                });
 
-        var d = $q.defer();
-
-        Images.insert(data, function (err, fileObj) {
-            if (err)
-                d.reject(err);
-            else
-                d.resolve();
-        });
-
-        return d.promise;
+                return d.promise;
+            }
+        }
     }
 }
-

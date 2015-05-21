@@ -1,0 +1,30 @@
+.container
+
+    .panel
+        .panel-heading.panel-title
+            h3 File upload with Angular-Meteor
+                small.pull-right Built with
+                    a(href="https://github.com/pbastowski/angular2-now") Angular2-now
+
+        .panel-body
+            .form-group
+                button.btn.btn-primary(ng-click="vm.takePhoto()")
+                    | Take a Photo with the Camera
+            .form-group
+
+                span.btn.btn-success.file-container
+                    input(
+                        type="file",
+                        file-change="vm.upload($event)",
+                    )
+                    | Select an image to Upload
+
+
+        .panel-heading.panel-title
+            h2 Uploaded Images
+
+        img(
+            ng-repeat="img in vm.images track by img._id",
+            ng-src="{{ vm.url(img) }}"
+            ng-click="vm.images.remove(img)"
+        )
