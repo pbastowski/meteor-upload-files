@@ -17,24 +17,21 @@
  * but it is none the less needed, otherwise images will not be persisted.
  */
 
-;(function(){
+console.log('! file-upload-service.ng.js');
 
-    console.log('! file-upload-service.ng.js');
+var Images = new FS.Collection('images', {
+    //stores: [new FS.Store.FileSystem("images", {path: "../../../../../.uploads"})]
+    stores: [new FS.Store.GridFS('images')]
+});
 
-    var Images = new FS.Collection('images', {
-        //stores: [new FS.Store.FileSystem("images", {path: "../../../../../.uploads"})]
-        stores: [new FS.Store.GridFS('images')]
-    });
+if (Meteor.isClient) {
 
-    if ( Meteor.isClient ) {
-
-        // Add the FileUpload service for the Client
-        angular.module('app')
-            .factory('FileUpload', fileUpload);
-
-        function fileUpload($meteor, $log, $q) {
+    @Service('FileUpload')
+    @Inject(['$meteor', '$log', '$q'])
+    class fileUpload {
+        constructor($meteor, $log, $q) {
             return {
-                images:    $meteor.collection(function () { return Images.find() }),
+                images:    $meteor.collection(Images),
                 url:       url,
                 uploadImg: uploadImg
             };
@@ -63,8 +60,5 @@
                 return d.promise;
             }
         }
-
     }
-
-}());
-
+}

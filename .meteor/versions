@@ -57,8 +57,11 @@ mongo@1.1.0
 mongo-livedata@1.0.8
 mquandalle:jade@0.4.3
 mquandalle:jade-compiler@0.4.3
+mrt:exports@1.0.0
 observe-sequence@1.0.6
 ordered-dict@1.0.3
+pbastowski:angular-babel@0.1.4
+pbastowski:angular2-now@0.2.2
 raix:eventemitter@0.1.2
 random@1.0.3
 reactive-dict@1.1.0
