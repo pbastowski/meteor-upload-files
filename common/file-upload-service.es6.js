@@ -27,7 +27,7 @@ var Images = new FS.Collection('images', {
 if (Meteor.isClient) {
 
     @Service('FileUpload')
-    @Inject(['$meteor', '$log', '$q'])
+    @Inject('$meteor', '$log', '$q')
     class fileUpload {
         constructor($meteor, $log, $q) {
             return {

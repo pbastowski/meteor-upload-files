@@ -11,12 +11,11 @@ cfs:standard-packages
 cfs:gridfs
 mquandalle:jade
 fourseven:scss@3.1.1
-civilframe:angular-jade
 twbs:bootstrap
 cfs:filesystem
 mdg:camera
-cscottnet:es5-shim
-urigo:angular
-pbastowski:angular-babel
 mrt:exports
 pbastowski:angular2-now
+angular
+civilframe:angular-jade
+pbastowski:angular-babel

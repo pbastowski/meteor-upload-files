@@ -8,7 +8,7 @@ angular.module('file-uploads', ['angular-meteor']);
 
 @Component('file-uploads')
 @View({ templateUrl: 'client/app.html'})
-@Inject(['$scope', '$log', 'FileUpload'])
+@Inject('$scope', '$log', 'FileUpload')
 class App {
     constructor($scope, $log, FileUpload) {
         var that = this;
